@@ -1,0 +1,22 @@
+GRANT EXECUTE ON GetAllClients TO aspnet
+GRANT EXECUTE ON GetClientById TO aspnet
+GRANT EXECUTE ON GetActiveWorkoutPlansByClientId TO aspnet
+GRANT EXECUTE ON GetInactiveWorkoutPlansByClientId TO aspnet
+GRANT EXECUTE ON GetWorkoutPlanById TO aspnet
+GRANT EXECUTE ON GetExercisePlansByWorkoutPlanId TO aspnet
+GRANT EXECUTE ON GetSetPlansByExercisePlanId TO aspnet
+GRANT EXECUTE ON GetInProgressWorkoutByClientId TO aspnet
+GRANT EXECUTE ON GetCompletedWorkoutsByClientId TO aspnet
+GRANT EXECUTE ON GetUnavailableStandingTeeTimeTimes TO aspnet
+GRANT EXECUTE ON GetOwnedStandingTeeTimeRequests TO aspnet
+GRANT EXECUTE ON GetUserStandingTeeTimeRequests TO aspnet
+GRANT EXECUTE ON GetWorkoutById TO aspnet
+GRANT EXECUTE ON GetWorkoutExercisesByWorkoutId TO aspnet
+GRANT EXECUTE ON GetExerciseSetsByWorkoutExerciseId TO aspnet
+GRANT EXECUTE ON GetSupersetExerciseByExercisePlanId TO aspnet
+GRANT EXECUTE ON GetSupersetExerciseByWorkoutExerciseId TO aspnet
+GRANT EXECUTE ON GetExerciseById TO aspnet
+GRANT EXECUTE ON AddWorkout TO aspnet
+GRANT EXECUTE ON AddWorkoutExercise TO aspnet
+GRANT EXECUTE ON AddExerciseSet TO aspnet
+

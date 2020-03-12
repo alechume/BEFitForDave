@@ -1,0 +1,209 @@
+﻿@page
+@model BEFit.Pages.ViewWorkoutModel
+@{
+    ViewData["Title"] = "ViewWorkoutPlan";
+    ViewData["ActivePage"] = "Client" + Model.Client.ClientId.ToString();
+    ViewData["ActiveDropdown"] = "Clients";
+    ViewData["ActiveSubPage"] = "ViewWorkouts";
+}
+
+<h1>@Model.Client.NickName</h1>
+
+<div class="row">
+    <div class="col-12 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Workout</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Information</h6>
+                <p class="card-text">
+                    <span class="font-weight-bold">Name: </span>@Model.Workout.WorkoutName
+                    &nbsp;&nbsp;
+                    <span class="font-weight-bold">Started: </span>@Model.Workout.DateStarted.ToString("MMM d, yyyy")
+                    @if (Model.Workout.DateCompleted.HasValue)
+                    {
+                        <text>&nbsp; &nbsp;</text>
+                        <span class="font-weight-bold">Completed: </span>@Model.Workout.DateCompleted.Value.ToString("MMM d, yyyy")
+                    }
+                </p>
+                <h6 class="card-subtitle mb-2 text-muted">Notes</h6>
+                <p class="card-text">@Model.Workout.Notes</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model.Workout.WorkoutExercises.Count > 0)
+{
+    <h2>Exercises</h2>
+    @foreach (var exercise in Model.Workout.WorkoutExercises)
+    {
+        <div class="card col-12 mb-3">
+            <div class="card-body">
+                <h5 class="card-subtitle">@exercise.Exercise.ExerciseName</h5>
+                @if (exercise.Type.Equals("Interval"))
+                {
+                    <p class="card-text mb-1">Interval</p>
+                }
+                else
+                {
+                    <p class="card-text mb-1">Rest: @(exercise.Rest == 0 ? "None" : exercise.Rest.ToString()) @(!string.IsNullOrEmpty(exercise.Tempo) ? "Tempo: " + exercise.Tempo : "")</p>
+                }
+                <div class="set-button-container pt-1">
+                    @foreach (var set in exercise.ExerciseSets)
+                    {
+                        @if (exercise.Type.Equals("Interval"))
+                        {
+                            string[] intervalString = set.Interval.Split('/');
+
+                            <div class="d-flex flex-column justify-content-around mr-3">
+                                <span class="d-block small">Working: @intervalString[0] Secs</span>
+                                <span class="d-block small">Rest: @intervalString[1] Secs</span>
+                                <span class="d-block small">Total: @intervalString[2] Secs</span>
+                            </div>
+                            <div class="d-flex flex-column justify-content-center text-center mr-3 border-left px-2">
+                                <button class="btn btn-outline-success mb-2">Start</button>
+                                <button class="btn btn-outline-danger">Finish</button>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="d-inline-block text-center mr-3">
+                                @if (exercise.Type.Equals("Reps"))
+                                {
+                                    <button class="btn btn-outline-info set-button">@set.Reps <span>Reps</span></button>
+                                }
+                                @if (exercise.Type.Equals("Time"))
+                                {
+                                    string timeString = "";
+                                    string timeUnitString = "";
+                                    if (set.Time.Value.Hours > 0)
+                                    {
+                                        timeString = Math.Round(set.Time.Value.TotalHours, 2).ToString();
+                                        timeUnitString = "Hrs";
+                                    }
+                                    else if (set.Time.Value.Minutes > 0)
+                                    {
+                                        timeString = Math.Round(set.Time.Value.TotalMinutes, 2).ToString();
+                                        timeUnitString = "Mins";
+                                    }
+                                    else if (set.Time.Value.Seconds > 0)
+                                    {
+                                        timeString = Math.Round(set.Time.Value.TotalSeconds, 2).ToString();
+                                        timeUnitString = "Secs";
+                                    }
+                                    <button class="btn btn-outline-info set-button">@timeString <span>@timeUnitString</span></button>
+                                }
+                                @if (exercise.Type.Equals("Distance"))
+                                {
+                                    string[] distanceString = set.Distance.Split('/');
+                                    <button class="btn btn-outline-info set-button">@distanceString[0] <span>@distanceString[1]</span></button>
+                                }
+                                @if (exercise.RPE.HasValue)
+                                {
+                                    <span class="small d-block">@@RPE @exercise.RPE</span>
+                                }
+                                else
+                                {
+                                    @if (set.Weight > 0)
+                                    {
+                                        <span class="small d-block">@@@set.Weight lbs</span>
+                                    }
+                                }
+                            </div>
+                        }
+                    }
+                </div>
+                @if (exercise.HasSuperset)
+                {
+                    BEFit.Domain.WorkoutExercise supersetExercise = exercise.SupersetExercise;
+                    <hr class="bg-secondary" />
+                    <h6 class="card-title text-muted">Superset</h6>
+                    <h5 class="card-subtitle">@supersetExercise.Exercise.ExerciseName</h5>
+                    @if (supersetExercise.Type.Equals("Interval"))
+                    {
+                        <p class="card-text mb-1">Interval</p>
+                    }
+                    else
+                    {
+                        <p class="card-text mb-1">Rest: @(supersetExercise.Rest == 0 ? "None" : supersetExercise.Rest.ToString()) @(!string.IsNullOrEmpty(supersetExercise.Tempo) ? "Tempo: " + supersetExercise.Tempo : "")</p>
+                    }
+                    <div class="set-button-container pt-1">
+                        @foreach (var set in supersetExercise.ExerciseSets)
+                        {
+                            @if (supersetExercise.Type.Equals("Interval"))
+                            {
+                                string[] intervalString = set.Interval.Split('/');
+
+                                <div class="d-flex flex-column justify-content-around mr-3">
+                                    <span class="d-block small">Working: @intervalString[0] Secs</span>
+                                    <span class="d-block small">Rest: @intervalString[1] Secs</span>
+                                    <span class="d-block small">Total: @intervalString[2] Secs</span>
+                                </div>
+                                <div class="d-flex flex-column justify-content-center text-center mr-3 border-left px-2">
+                                    <button class="btn btn-outline-success mb-2">Start</button>
+                                    <button class="btn btn-outline-danger">Finish</button>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="d-inline-block text-center mr-3">
+                                    @if (supersetExercise.Type.Equals("Reps"))
+                                    {
+                                        <button class="btn btn-outline-info set-button">@set.Reps <span>Reps</span></button>
+                                    }
+                                    @if (supersetExercise.Type.Equals("Time"))
+                                    {
+                                        string timeString = "";
+                                        string timeUnitString = "";
+                                        if (set.Time.Value.Hours > 0)
+                                        {
+                                            timeString = Math.Round(set.Time.Value.TotalHours, 2).ToString();
+                                            timeUnitString = "Hrs";
+                                        }
+                                        else if (set.Time.Value.Minutes > 0)
+                                        {
+                                            timeString = Math.Round(set.Time.Value.TotalMinutes, 2).ToString();
+                                            timeUnitString = "Mins";
+                                        }
+                                        else if (set.Time.Value.Seconds > 0)
+                                        {
+                                            timeString = Math.Round(set.Time.Value.TotalSeconds, 2).ToString();
+                                            timeUnitString = "Secs";
+                                        }
+                                        <button class="btn btn-outline-info set-button">@timeString <span>@timeUnitString</span></button>
+                                    }
+                                    @if (supersetExercise.Type.Equals("Distance"))
+                                    {
+                                        string[] distanceString = set.Distance.Split('/');
+                                        <button class="btn btn-outline-info set-button">@distanceString[0] <span>@distanceString[1]</span></button>
+                                    }
+                                    @if (supersetExercise.RPE.HasValue)
+                                    {
+                                        <span class="small d-block">@@RPE @supersetExercise.RPE</span>
+                                    }
+                                    else
+                                    {
+                                        @if (set.Weight > 0)
+                                        {
+                                            <span class="small d-block">@@@set.Weight lbs</span>
+                                        }
+                                    }
+                                </div>
+                            }
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="card col-12 mb-3">
+        <div class="card-body">
+            <h5 class="card-title">Exercises</h5>
+            <p class="card-text">No exercises</p>
+        </div>
+    </div>
+}
+

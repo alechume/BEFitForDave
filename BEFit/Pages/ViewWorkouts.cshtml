@@ -1,0 +1,80 @@
+﻿@page
+@model BEFit.Pages.ViewWorkoutsModel
+@{
+    ViewData["Title"] = "ViewWorkouts";
+    ViewData["ActivePage"] = "Client" + Model.Client.ClientId.ToString();
+    ViewData["ActiveDropdown"] = "Clients";
+    ViewData["ActiveSubPage"] = "ViewWorkouts";
+}
+
+<h1>@Model.Client.NickName</h1>
+
+<div class="row">
+    <div class="col-12 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">In Progress Workout</h5>
+                @if (Model.InProgressWorkout.WorkoutName != null)
+                {
+                    <table class="table table-sm mb-0">
+                        <thead>
+                            <tr>
+                                <th>Workout Name</th>
+                                <th>Date Started</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>@Model.InProgressWorkout.WorkoutName</td>
+                                <td>@Model.InProgressWorkout.DateStarted.ToString("MMM d, yyyy")</td>
+                                <td><a class="btn btn-sm btn-secondary" href="~/ViewWorkout?ClientId=@Model.Client.ClientId&WorkoutId=@Model.InProgressWorkout.WorkoutId">View</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <span class="text-muted">No in progress workout</span>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Completed Workouts</h5>
+                @if (Model.CompletedWorkouts.Count > 0)
+                {
+                    <table class="table table-sm mb-0">
+                        <thead>
+                            <tr>
+                                <th>Workout Name</th>
+                                <th>Date Started</th>
+                                <th>Date Completed</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var workout in Model.CompletedWorkouts)
+                            {
+                                <tr>
+                                    <td>@workout.WorkoutName</td>
+                                    <td>@workout.DateStarted.ToString("MMM d, yyyy")</td>
+                                    <td>@workout.DateCompleted.Value.ToString("MMM d, yyyy")</td>
+                                    <td><a class="btn btn-sm btn-secondary" href="~/ViewWorkout?ClientId=@Model.Client.ClientId&WorkoutId=@workout.WorkoutId">View</a></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <span class="text-muted">No completed workouts</span>
+                }
+            </div>
+        </div>
+    </div>
+</div>

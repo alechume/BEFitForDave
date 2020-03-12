@@ -1,0 +1,52 @@
+﻿@page
+@model BEFit.Pages.FilterTestModel
+@{
+}
+
+<form method="post">
+    <button id="button1" name="button1" value="Case1">Case1 run</button>
+    <button id="button2" name="button2" value="default">Default run</button>
+</form>
+
+<div id="myDiv">
+    Not run
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            console.log("ready");
+            $("#button1").click(function (e) {
+                e.preventDefault();
+                var button = $(this);
+                var originalText = button.html();
+                button.html('loading');
+
+                var person = {
+                    FirstName: 'Andrew',
+                    LastName: 'Lock',
+                    Age: 31
+                }
+                
+                $.ajax({
+                    type: "POST",
+                    url: '/Filter',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(person),
+                    headers: {
+                        RequestVerificationToken:
+                            $('input:hidden[name="__RequestVerificationToken"]').val()
+                    }
+                }).done(function (data) {
+                    document.getElementById("myDiv").innerHTML = data.firstName + '<br />' + data.lastName + '<br />' + data.age;
+                    button.html(originalText);
+                });
+            });
+            
+            $("#button1").click(function (e) {
+                e.preventDefault();
+                $(this).html('loading');
+            });
+        });
+    </script>
+}

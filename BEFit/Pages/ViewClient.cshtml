@@ -1,0 +1,276 @@
+﻿@page
+@model BEFit.Pages.ViewClientModel
+@{
+    ViewData["Title"] = "ViewClient";
+    ViewData["ActivePage"] = "Client" + Model.Client.ClientId.ToString();
+    ViewData["ActiveDropdown"] = "Clients";
+}
+
+<h1>@Model.Client.NickName</h1>
+
+<div class="row">
+    <div class="col-sm-6 col-xl-3 mb-3">
+        <div class="card">
+            <div class="card-header text-center">
+                <span class="font-weight-bold">Quick Access</span>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <a href="#" class="btn btn-success btn-block">Continue Workout</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="#" class="btn btn-primary btn-block">Start Workout</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="#" class="btn btn-primary btn-block">View Last Workout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3 mb-3 order-lg-1">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Best and Worst (Lbs)</h5>
+                <span class="text-danger">TO DO</span>
+                <table class="table table-sm mb-0">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Exercise</th>
+                            <th>Worst</th>
+                            <th>Best</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Deadlift</td>
+                            <td class="text-danger">100</td>
+                            <td class="text-success">200</td>
+                        </tr>
+                        <tr>
+                            <td>Squat</td>
+                            <td class="text-danger">100</td>
+                            <td class="text-success">200</td>
+                        </tr>
+                        <tr>
+                            <td>Bench</td>
+                            <td class="text-danger">100</td>
+                            <td class="text-success">200</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-lg-6 mb-3 order-1 order-lg-0">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title d-flex justify-content-between">
+                    Active Workout Plans
+                    <a href="~/ViewWorkoutPlans?ClientId=@Model.Client.ClientId">View all</a>
+                </h5>
+                @if (Model.ActiveWorkoutPlans.Count > 0)
+                {
+                    <table class="table table-sm mb-0">
+                        <thead>
+                            <tr>
+                                <th>Plan Name</th>
+                                <th>Date Created</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var plan in Model.ActiveWorkoutPlans)
+                            {
+                                <tr>
+                                    <td>@plan.WorkoutPlanName</td>
+                                    <td>@plan.DateCreated.ToString("MMM d, yyyy")</td>
+                                    <td><a class="btn btn-sm btn-secondary" href="~/ViewWorkoutPlan?ClientId=@Model.Client.ClientId&WorkoutPlanId=@plan.WorkoutPlanId">View</a></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <span class="text-muted">No active workout plans</span>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-6 col-xl-3 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Body Weight</h5>
+                <span class="text-danger">TO DO</span>
+                <canvas id="bodyWeightChart" width="400" height="400"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Squat</h5>
+                <span class="text-danger">TO DO</span>
+                <canvas id="squatChart" width="400" height="400"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Deadlift</h5>
+                <span class="text-danger">TO DO</span>
+                <canvas id="deadliftChart" width="400" height="400"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Bench</h5>
+                <span class="text-danger">TO DO</span>
+                <canvas id="benchChart" width="400" height="400"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/Chart.min.js"></script>
+
+    <script type="text/javascript">
+        var bodyweightdata = {
+            labels: ["Jan", "Feb", "Mar", "Apr", "May"],
+            datasets: [
+                {
+                    label: "Body Weight",
+                    fill: true,
+                    backgroundColor: "rgba(75,192,192,0.5)",
+                    lineTension: 0,
+                    borderColor: "rgba(75,192,192,1)",
+                    pointBackgroundColor: "#fff",
+                    pointBorderWidth: 5,
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: "rgba(75,192,192,1)",
+                    pointHoverBorderColor: "rgba(75,192,192,1)",
+                    pointHoverBorderWidth: 2,
+                    pointRadius: 1,
+                    pointHitRadius: 10,
+                    data: [110, 125, 135, 135, 150]
+                }
+            ]
+        };
+
+        var squatdata = {
+            labels: ["Jan", "Feb", "Mar", "Apr", "May"],
+            datasets: [
+                {
+                    label: "Weight",
+                    fill: true,
+                    backgroundColor: "rgba(31,145,31,0.5)",
+                    lineTension: 0,
+                    borderColor: "rgba(31,145,31,1)",
+                    pointBackgroundColor: "#fff",
+                    pointBorderWidth: 5,
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: "rgba(31,145,31,1)",
+                    pointHoverBorderColor: "rgba(31,145,31,1)",
+                    pointHoverBorderWidth: 2,
+                    pointRadius: 1,
+                    pointHitRadius: 10,
+                    data: [135, 150, 175, 200, 210]
+                }
+            ]
+        };
+
+        var deadliftdata = {
+            labels: ["Jan", "Feb", "Mar", "Apr", "May"],
+            datasets: [
+                {
+                    label: "Weight",
+                    fill: true,
+                    backgroundColor: "rgba(181,38,38,0.5)",
+                    lineTension: 0,
+                    borderColor: "rgba(181,38,38,1)",
+                    pointBackgroundColor: "#fff",
+                    pointBorderWidth: 5,
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: "rgba(181,38,38,1)",
+                    pointHoverBorderColor: "rgba(181,38,38,1)",
+                    pointHoverBorderWidth: 2,
+                    pointRadius: 1,
+                    pointHitRadius: 10,
+                    data: [150, 185, 205, 190, 225]
+                }
+            ]
+        };
+
+        var benchdata = {
+            labels: ["Jan", "Feb", "Mar", "Apr", "May"],
+            datasets: [
+                {
+                    label: "Weight",
+                    fill: true,
+                    backgroundColor: "rgba(181,103,38,0.5)",
+                    lineTension: 0,
+                    borderColor: "rgba(181,103,38,1)",
+                    pointBackgroundColor: "#fff",
+                    pointBorderWidth: 5,
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: "rgba(181,103,38,1)",
+                    pointHoverBorderColor: "rgba(181,103,38,1)",
+                    pointHoverBorderWidth: 2,
+                    pointRadius: 1,
+                    pointHitRadius: 10,
+                    data: [95, 105, 110, 120, 125]
+                }
+            ]
+        };
+
+        var ctx = document.getElementById("bodyWeightChart");
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: bodyweightdata,
+            options: {
+                legend: {
+                    display: false
+                }
+            }
+        });
+
+        var ctx2 = document.getElementById("squatChart");
+        var myChart = new Chart(ctx2, {
+            type: 'line',
+            data: squatdata,
+            options: {
+                legend: {
+                    display: false
+                }
+            }
+        });
+
+        var ctx3 = document.getElementById("deadliftChart");
+        var myChart = new Chart(ctx3, {
+            type: 'line',
+            data: deadliftdata,
+            options: {
+                legend: {
+                    display: false
+                }
+            }
+        });
+
+        var ctx4 = document.getElementById("benchChart");
+        var myChart = new Chart(ctx4, {
+            type: 'line',
+            data: benchdata,
+            options: {
+                legend: {
+                    display: false
+                }
+            }
+        });
+    </script>
+}

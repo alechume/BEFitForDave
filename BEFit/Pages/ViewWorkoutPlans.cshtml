@@ -1,0 +1,97 @@
+﻿@page
+@model BEFit.Pages.ViewWorkoutPlansModel
+@{
+    ViewData["Title"] = "ViewWorkoutPlans";
+    ViewData["ActivePage"] = "Client" + Model.Client.ClientId.ToString();
+    ViewData["ActiveDropdown"] = "Clients";
+    ViewData["ActiveSubPage"] = "ViewWorkoutPlans";
+}
+
+@if (!string.IsNullOrEmpty(Model.ErrorString))
+{
+    <div class="alert alert-danger" role="alert">
+        @Model.ErrorString
+    </div>
+}
+
+<h1>@Model.Client.NickName</h1>
+
+<div class="row">
+    <div class="col-12 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Active Workout Plans</h5>
+                @if (Model.ActiveWorkoutPlans.Count > 0)
+                {
+                    <table class="table table-sm mb-0">
+                        <thead>
+                            <tr>
+                                <th>Plan Name</th>
+                                <th>Date Created</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var plan in Model.ActiveWorkoutPlans)
+                            {
+                                <tr>
+                                    <td>@plan.WorkoutPlanName</td>
+                                    <td>@plan.DateCreated.ToString("MMM d, yyyy")</td>
+                                    <td><a class="btn btn-sm btn-secondary" href="~/ViewWorkoutPlan?ClientId=@Model.Client.ClientId&WorkoutPlanId=@plan.WorkoutPlanId">View</a></td>
+                                    <td>
+                                        <form method="post">
+                                            <button type="submit" name="Submit" id="Submit" value="SubmitStartWorkout" class="btn btn-sm btn-success">Start Workout</button>
+                                            <input type="hidden" name="WorkoutPlanId" id="WorkoutPlanId" value="@plan.WorkoutPlanId" />
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <span class="text-muted">No active workout plans</span>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Inactive Workout Plans</h5>
+                @if (Model.InactiveWorkoutPlans.Count > 0)
+                {
+                    <table class="table table-sm mb-0">
+                        <thead>
+                            <tr>
+                                <th>Plan Name</th>
+                                <th>Date Created</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var plan in Model.InactiveWorkoutPlans)
+                            {
+                                <tr>
+                                    <td>@plan.WorkoutPlanName</td>
+                                    <td>@plan.DateCreated.ToString("MMM d, yyyy")</td>
+                                    <td><a class="btn btn-sm btn-secondary" href="~/ViewWorkoutPlan?ClientId=@Model.Client.ClientId&WorkoutPlanId=@plan.WorkoutPlanId">View</a></td>
+                                    <td><a class="btn btn-sm btn-warning" href="#">Activate</a></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <span class="text-muted">No inactive workout plans</span>
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,25 @@
+﻿@model BEFit.Pages.Shared._ClientsMenuPartialModel
+
+<a class="sidebar-link collapsed" href="#collapseClients" data-toggle="collapse" aria-expanded="@(ViewData["ActiveDropdown"].ToString() == "Clients" ? "true" : "false")">
+    <i class="fas fa-users"></i>
+    Clients
+</a>
+<ul class="sidebar-dropdown list-unstyled collapse @(ViewData["ActiveDropdown"].ToString() == "Clients" ? "show" : "")" id="collapseClients" data-parent="#sidebar">
+    @foreach (var client in Model.Clients)
+    {
+        <li class="sidebar-item">
+            <a class="sidebar-link @(ViewData["ActivePage"].ToString() == "Client" + client.ClientId.ToString() ? "active" : "")" href="~/ViewClient?ClientId=@client.ClientId">@client.NickName</a>
+            @if (ViewData["ActivePage"].ToString() == "Client" + client.ClientId.ToString())
+            {
+                <ul class="list-unstyled">
+                    <li class="sidebar-item">
+                        <a class="sidebar-link sidebar-sublink @(ViewData["ActiveSubPage"].ToString() == "ViewWorkoutPlans" ? "active" : "")" href="~/ViewWorkoutPlans?ClientId=@client.ClientId">Workout Plans</a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link sidebar-sublink @(ViewData["ActiveSubPage"].ToString() == "ViewWorkouts" ? "active" : "")" href="~/ViewWorkouts?ClientId=@client.ClientId">Workouts</a>
+                    </li>
+                </ul>
+            }
+        </li>
+    }
+</ul>
